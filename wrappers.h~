@@ -1,0 +1,55 @@
+/*
+  wrappers.h - Wrapper function prototypes for CSCI212 socket programs.
+  Most programs using ports and sockets need to #include the same
+  cluster of header files, wrapper functions, etc.
+  These #includes & wrapper functions are for UNIX sockets.
+  Ver1: Koren Ward
+*/
+
+#ifndef _WRAPPERS_H_
+#define _WRAPPERS_H_
+
+#include <unistd.h>     // unix system fns
+#include <sys/types.h>  // a variety of typedefs
+#include <sys/socket.h> // socket stuff
+#include <netinet/in.h> // functions for converting
+#include <netdb.h>      // dotted decimal strings
+#include <arpa/inet.h> 	// to IP numbers
+#include <signal.h>     // signal handling
+#include <sys/signal.h> // signal handling
+#include <errno.h>      // error reports
+#include <cstdlib>      // things like exit()
+#include <cctype>       // char stuff...
+#include <cstring>      // cstring stuff...
+#include <iostream>     // stream stuff...
+
+using namespace std;
+
+const int SERV_TCP_PORT = 8000; // server's default port number
+const int MAX_SIZE = 80;        // send/receive buffer size
+
+enum StatusType{eInitGame,ePlayGame,eUserWin,eCompWin,eDraw};
+
+struct GamePktType{
+  char Game[3][3];
+  int UserScore, CompScore;
+  int MoveNo;
+  StatusType Status;
+};
+
+GamePktType GamePkt;
+
+read(fd,(char*)&GamePkt,sizeof(GamePktType);
+
+write(fd,(char*)&GamePkt,sizeof(GamePktType);
+
+//============= Wrapper Function Prototypes ===============
+
+int Socket(int Domain, int Type, int Protocol);
+void Bind(int Sockfd, sockaddr *MyAddr, int AddrLen);
+void Listen(int Sockfd, int Backlog);
+void Connect(int Sockfd, sockaddr *ServAddr, int Size);
+int Accept(int Sockfd, sockaddr *Addr, int *AddrLen);
+hostent *Gethostbyname(char *ServHost);
+
+#endif

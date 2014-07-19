@@ -1,0 +1,70 @@
+// Example iterative TCP server - CSCI212
+#include "wrappers.h"
+
+
+int main()
+{
+	int Sockfd, NewSockfd, ClntLen;
+	sockaddr_in ClntAddr, ServAddr;
+	int Port = SERV_TCP_PORT;
+	char Buff[MAX_SIZE];
+	int Len;
+
+  // Open a TCP socket (an Internet stream socket)
+	Sockfd = Socket(AF_INET, SOCK_STREAM, 0); // socket() wrapper fn
+
+  // Bind the local address, so that the client can send to server
+	memset((char*)&ServAddr, 0, sizeof(ServAddr));
+	ServAddr.sin_family = AF_INET;
+	ServAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	ServAddr.sin_port = htons(Port);
+
+	Bind(Sockfd, (sockaddr*) &ServAddr, sizeof(ServAddr));
+
+  // Listen to the socket
+	Listen(Sockfd, 5);
+
+	for(;;)
+	{
+    // Wait for a connection from a client; this is an iterative server
+	ClntLen = sizeof(ClntAddr);
+	NewSockfd = Accept(Sockfd, (sockaddr*)&ClntAddr, &ClntLen);
+
+	if(NewSockfd < 0)
+	{
+		perror("Can't bind to local address!");
+	}
+
+    // Read a message from the client and echo it back
+	read(NewSockfd, Buff, MAX_SIZE);
+	write(NewSockfd, Buff, MAX_SIZE);
+
+	close(NewSockfd);
+	}
+	return 0; // should never happen
+}
+
+/*
+Do socket initialisations
+for(;;){
+Wait for Client connect
+Get GameBegin msg
+Init Game array
+for(;;){
+Send ClientMove msg to Client
+Send Game array to Client
+Get Game array from Client
+if (WinOrDraw) break;
+Make ServerMove
+if (WinOrDraw) break;
+}
+if(ServerWin)
+send ServerWin msg to client
+else if(ClientWin)
+send ClientWin msg to client
+else
+send Stalemate msg to client
+Send Game array to Client
+}
+close socket
+*/

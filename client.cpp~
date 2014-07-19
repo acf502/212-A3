@@ -1,0 +1,85 @@
+/*
+Name: Aaron Colin Foote
+Date: 11th May 2013
+User: acf502 / 4258770
+File.: client.cpp for CSCI212 Assignment 3
+*/
+
+// Example TCP client - CSCI212
+#include "wrappers.h"
+
+int main()
+{
+	int Sockfd;
+	sockaddr_in ServAddr;
+	char ServHost[] = "localhost";
+	hostent *HostPtr;
+	int Port = SERV_TCP_PORT;	//48770?
+	char Buff1[MAX_SIZE] = "GameBegin";
+	char Buff2[MAX_SIZE]; 
+	char GameAry[3][3];
+
+  // Get the address of the host
+	HostPtr = Gethostbyname(ServHost);
+
+	if(HostPtr->h_addrtype !=  AF_INET)
+	{
+		perror("Unknown address type!");
+		exit(1);
+	}
+
+	memset((char *) &ServAddr, 0, sizeof(ServAddr));
+	ServAddr.sin_family = AF_INET;
+	ServAddr.sin_addr.s_addr = ((in_addr*)HostPtr->h_addr_list[0])->s_addr;
+	ServAddr.sin_port = htons(Port);	//Port = 48770?
+
+
+  // Open a TCP socket
+	Sockfd = Socket(AF_INET, SOCK_STREAM, 0);
+
+	if (Sockfd == 0)
+		perror("Create socket");
+  // Connect to the server
+	if (Connect(Sockfd, (sockaddr*)&ServAddr, sizeof(ServAddr)))
+	{
+		puts("error connecting");
+		exit(1);
+	}
+
+  // Write and read a message to/from the server 
+	write(Sockfd, Buff1, MAX_SIZE);
+	for (;;)
+	{
+		read(Sockfd,(char*)&GamePkt,sizeof(GamePktType);
+
+		//CONTINUE FROM HERE
+
+	}
+
+	close(Sockfd);
+	return 0;
+}
+
+/*
+Do socket initialisations
+Send GameBegin msg to Server
+for(;;){
+Get msg from Server
+Get Game array from server
+Display Game array
+if (msg is ClientMove)
+Get & Make ClientMove
+Display Game array
+Send Game array to Server
+else break;
+}
+Display Game array
+if(Server win msg received)
+Display "Computer Win" msg
+else if(Client win msg received)
+Display "You Win" msg
+else
+Display "Stalemate" msg
+Display "Game Over" msg
+close socket
+*/
